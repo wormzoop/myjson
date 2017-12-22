@@ -1,7 +1,6 @@
 package com.zoop.json;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +8,7 @@ import java.util.Set;
 public class JSON {
 
 	//将对象转成json字符串
+	@SuppressWarnings("unchecked")
 	public static String toJSONString(Object obj) {
 		if(obj == null) {
 			return null;
@@ -39,7 +39,18 @@ public class JSON {
 			return sb.toString();
 		}
 		Field[] fields = obj.getClass().getDeclaredFields();
-		return "";
+		StringBuilder sb = new StringBuilder("{");
+		for(Field field : fields) {
+			field.setAccessible(true);
+			try {
+				sb.append("\""+field.getName()+"\":"+toJSONString(field.get(obj))).append(",");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		sb.delete(sb.length()-1, sb.length());
+		sb.append("}");
+		return sb.toString();
 	}
 	
 }
