@@ -14,20 +14,23 @@ public class JSON {
 			return null;
 		}
 		String classname = obj.getClass().getName();
-		if(classname.equals("java.util.HashMap")) {
+		if(classname.contains("java.lang")) {
+			return obj.toString();
+		}
+		if(classname.equals("java.util.HashMap") || classname.equals("java.util.Map")) {
 			Map<String, Object> map = (Map<String, Object>)obj;
 			Set<Map.Entry<String, Object>> entrySet = map.entrySet();
 			StringBuilder sb = new StringBuilder("{");
 			for(Map.Entry<String, Object> entry : entrySet) {
-				sb.append("\""+entry.getKey()+"\":"+entry.getValue()+",");
+				sb.append("\""+entry.getKey()+"\":"+toJSONString(entry.getValue())+",");
 			}
 			sb.delete(sb.length()-1, sb.length());//去掉逗号
 			sb.append("}");
 			return sb.toString();
 		}
-		if(classname.equals("java.util.ArrayList")) {
+		if(classname.equals("java.util.ArrayList") || classname.equals("java.util.List")) {
 			StringBuilder sb = new StringBuilder("[");
-			List<Object> list = (ArrayList<Object>)obj;
+			List<Object> list = (List<Object>)obj;
 			for(int i = 0; i < list.size(); i++) {
 				sb.append(toJSONString(list.get(i))).append(",");
 			}
