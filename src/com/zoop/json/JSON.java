@@ -1,6 +1,8 @@
 package com.zoop.json;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,8 +25,15 @@ public class JSON {
 			sb.append("}");
 			return sb.toString();
 		}
-		if(classname.equals("java.util.List")) {
-			return "";
+		if(classname.equals("java.util.ArrayList")) {
+			StringBuilder sb = new StringBuilder("[");
+			List<Object> list = (ArrayList<Object>)obj;
+			for(int i = 0; i < list.size(); i++) {
+				sb.append(toJSONString(list.get(i))).append(",");
+			}
+			sb.delete(sb.length()-1, sb.length());
+			sb.append("]");
+			return sb.toString();
 		}
 		Field[] fields = obj.getClass().getDeclaredFields();
 		return "";
